@@ -5,14 +5,23 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import Header from "./header";
 import DeleteIcon from '@mui/icons-material/Delete';
+import axios from "axois";
 const Todo = () => {
   const [task , settask] = useState([]);
   const [input, setinput] = useState(false);
 
-  const handletask = () => {
+  const handletask = async() => {
     if( input.trim() != "") {
+      try {
+      
+      await axios.post("http://localhost:5000/api/tasks", {
+        task: input
+      });
       settask([...task , input]);
       setinput("");
+      } catch (error) {
+      console.error("Error sending task to backend:", error);
+    }
     }
   }
 

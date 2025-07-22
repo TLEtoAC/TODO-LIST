@@ -13,7 +13,6 @@ const Todo = () => {
   const handletask = async() => {
     if( input.trim() != "") {
       try {
-      
       await axios.post("http://localhost:5000/api/tasks", {
         task: input
       });

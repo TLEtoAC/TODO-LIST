@@ -18,6 +18,47 @@ const Login = () => {
    const PasswordRef1 = useRef(null)
    const IconRef1 = useRef(null)
     
+   const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!name || !email || !password || !confirm) {
+      alert("All fields are required.");
+      return;
+    }
+
+    if (password !== confirm) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, email, password }),
+        credentials: "include"
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Signup successful!");
+        console.log(data);
+        setname('');
+        setemail('');
+        setpassword('');
+        setConfirm('');
+      } else {
+        alert(data.message || "Signup failed.");
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
+      alert("Something went wrong.");
+    }
+  };
+
     const showPassword = () => {
        const input = PasswordRef.current;
        const icon = IconRef.current;
@@ -51,7 +92,7 @@ const Login = () => {
       alert(`Sign Up is Done go to Back` );
     }
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
        <div className='flex justify-center items-center min-h-screen' data-aos="fade-down">
     <div sx={{ height: "50px"}} className=" w-md bg-white rounded-2xl border border-purple-700 p-8">
        <h1 className='text-center font-extrabold text-3xl mb-6'>Sign In</h1>
@@ -86,7 +127,7 @@ const Login = () => {
        </div>
     </div>
     </div>
-    </div>
+    </form>
   )
 }
 

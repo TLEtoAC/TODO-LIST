@@ -19,6 +19,33 @@ const Signup = () => {
     alert(`You are sure to click here`);
   };
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+     try {
+      const response = await fetch("http://localhost:5000/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password }),
+        credentials: "include" 
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+         alert("Login Successful.")
+      
+      } else {
+        setMessage(data.message || "Login failed");
+      }
+
+    } catch (err) {
+      setMessage("Server error");
+      console.error("Login error:", err);
+    }
+  };
+
    const showPassword = () => {
     const input = PasswordRef.current;
     const icon = iconRef.current;
@@ -49,7 +76,7 @@ const Signup = () => {
     <> 
      <Header />
      <main>
-     <div className="">
+     <form onClick={handleLogin} className="">
       <div className="flex justify-center items-center min-h-screen hover:scale-100 transition-all duration-300 ease-in-out " data-aos="fade-up">
         <div sx={{ height: "50px"}} className=" w-md bg-white rounded-2xl border border-purple-700 p-8">
           <h1 className="text-center font-extrabold text-3xl mb-6">
@@ -101,7 +128,7 @@ const Signup = () => {
           </div>
         </div>
       </div>
-      </div>
+      </form>
      </main>
     </>
   );

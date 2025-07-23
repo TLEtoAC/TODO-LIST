@@ -8,15 +8,30 @@ import eyeIcon from "/assets/eye.png";
 import invisible from "/assets/invisible.png"
 
 const Signup = () => {
-  const [email, setemail] = useState("");
-  const [password, setpassword] = useState("");
+  const [email, setemail] = useState('');
+  const [password, setpassword] = useState('');
+  const [message , setMessage] = useState('');
+  const [users, setUsers] = useState([]);
   const PasswordRef = useRef(null);
   const iconRef = useRef(null)
-  const add = () => {
-    alert(`Email: ${email}, Password: ${password}`);
+  
+   useEffect(() => {
+    fetchUsers();
+  }, []);
+
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/users");
+      const data = await response.json();
+      setUsers(data);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
   };
+
   const Forget = () => {
-    alert(`You are sure to click here`);
+    alert(`Forget Password`);
   };
 
   const handleLogin = async (e) => {
@@ -76,7 +91,7 @@ const Signup = () => {
     <> 
      <Header />
      <main>
-     <form onClick={handleLogin} className="">
+     <form onSubmit={handleLogin} className="">
       <div className="flex justify-center items-center min-h-screen hover:scale-100 transition-all duration-300 ease-in-out " data-aos="fade-up">
         <div sx={{ height: "50px"}} className=" w-md bg-white rounded-2xl border border-purple-700 p-8">
           <h1 className="text-center font-extrabold text-3xl mb-6">
@@ -99,18 +114,22 @@ const Signup = () => {
          </span>
         </div>
           </div>
+           {message && (
+                <p className="text-center text-red-600 font-semibold">{message}</p>
+              )}
+
           <div className="text-center font-semibold mb-6">
             <Link to="/Todo">
-              <button onClick={add} className="border bg-blue-700 px-2 py-2 text-white rounded-lg outline-none">
+              <button type="sumbit" className="border bg-blue-700 px-2 py-2 text-white rounded-lg outline-none">
                 SignUp
               </button>
             </Link>
           </div>
           <div className="flex text-blue-700 font-semibold gap-25">
-            <button onClick={Forget} className="text-black">
+            <button type="button" onClick={Forget} className="text-black">
               Forget password?
             </button>
-            <button onClick={Create}>Create New Account</button>
+            <button type onClick={Create}>Create New Account</button>
           </div>
           <div className="flex items-center my-6">
             <div className="flex-grow border-t border-gray-700"></div>
@@ -126,6 +145,16 @@ const Signup = () => {
               Continue with<img className="w-22" src="./assets/git.png" /></button>
             </div>
           </div>
+          <div className="p-4">
+          <h2 className="text-xl font-bold mb-4">User List</h2>
+          <ul className="list-disc pl-6">
+            {users.map((user) => (
+              <li key={user._id}>
+                {user.name} ({user.email})
+              </li>
+            ))}
+          </ul>
+        </div>
         </div>
       </div>
       </form>

@@ -1,34 +1,52 @@
-import React, { useRef } from "react";
+import React, { useRef , useEffect } from "react";
 import { useState} from "react";
 import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Header from "./header";
 import DeleteIcon from '@mui/icons-material/Delete';
-import axios from "axois";
+import axios from "axios";
 const Todo = () => {
-  const [task , settask] = useState([]);
-  const [input, setinput] = useState(false);
+  const [tasks , settasks] = useState([]);
+  const [input, setinput] = useState("");
+  
+  useEffect(() => {
+    AOS.init({ duration: 1000 });
+    fetchTasks();
+  }, []);
 
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/api/tasks");
+      const data = await response.json();
+      settasks(data);
+    } catch (err) {
+      console.error("Error fetching tasks:", err);
+    }
+  };
   const handletask = async() => {
     if( input.trim() != "") {
       try {
       await axios.post("http://localhost:5000/api/tasks", {
         task: input
       });
-      settask([...task , input]);
-      setinput("");
+      settasks([...tasks , input]);
+      fetchTasks();
       } catch (error) {
       console.error("Error sending task to backend:", error);
     }
     }
   }
-
-  const handleDeleteTask = (indexToRemove) => {
-    const newTasks = task.filter((_, index) => index !== indexToRemove);
-    settask(newTasks);
+   const deleteTask = async (id) => {
+    try {
+      await fetch(`http://localhost:5000/api/tasks/${id}`, {
+        method: "DELETE",
+      });
+      settasks(tasks.filter((task) => task._id !== id));
+    } catch (err) {
+      console.error("Error deleting task:", err);
+    }
   };
-
   return (
     <> 
      <Header />
@@ -42,7 +60,6 @@ const Todo = () => {
              <input
               className="text-white border-0 px-2 rounded-2xl w-80 h-10 mb-6 bg-gray-500"
               type="text"
-              name="username"
               placeholder="Enter a your task"
               onChange={e => setinput(e.target.value)}
               />
@@ -54,10 +71,10 @@ const Todo = () => {
 
           </div>
            <ul>
-             {task.map((task,index) => (
-             <li key={index} className="flex justify-between items-center bg-gray-200 px-3 py-2 rounded text-black mb-4">
-              <span>{task}</span>
-              <button onClick={() => handleDeleteTask(index)}><DeleteIcon /></button>
+             {tasks.map((task) => (
+             <li key={task._id} className="flex justify-between items-center bg-gray-200 px-3 py-2 rounded text-black mb-4">
+              <span>{task.task}</span>
+              <button onClick={() => deleteTask(task._id)}><DeleteIcon /></button>
               </li>
             ))}
            </ul>

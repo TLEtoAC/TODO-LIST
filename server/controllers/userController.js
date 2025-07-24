@@ -1,4 +1,4 @@
-import pool from "../database/db";import { displayAll, NewtaskModel, EdittaskModel, DeletetaskModel } from "../models/userModels";
+import pool from "../database/db.js";import { displayAll, NewtaskModel, EdittaskModel, DeletetaskModel } from "../models/userModels";
 
 export const displaytasks = async(req,res) => {
     const response = await displayAll();

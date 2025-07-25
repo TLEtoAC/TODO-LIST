@@ -1,8 +1,15 @@
-import pool from "../database/db.js";import { displayAll, NewtaskModel, EdittaskModel, DeletetaskModel } from "../models/userModels";
+import pool from "../database/db.js";
+import { displayAll, NewtaskModel, EdittaskModel, DeletetaskModel } from "../models/userModels.js";
 
-export const displaytasks = async(req,res) => {
-    const response = await displayAll();
-    res.json(response);
+export const displaytasks = async (req, res) => {
+    try {
+        const response = await displayAll();
+        console.log(response);
+        res.json(response);
+    }
+    catch (err) {
+        console.log("todolist data could not be fetched from database");
+    }
 }
 
 export const editTasks = async (req,res) => {
@@ -21,5 +28,5 @@ export const deleteTask = async (req, res) => {
 export const newTask = async (req, res) => {
     const { title, content } = req.body;
     const response = await NewtaskModel(title,content);
-    res.json(response);
+    console.log(response);
 }

@@ -8,7 +8,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import axios from "axios";
 const Todo = () => {
   const [tasks , settasks] = useState([]);
-  const [input, setinput] = useState("");
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   
   useEffect(() => {
     AOS.init({ duration: 1000 });
@@ -17,7 +18,7 @@ const Todo = () => {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/tasks");
+      const response = await fetch("http://localhost:5000/api/tasks/all");
       const data = await response.json();
       settasks(data);
     } catch (err) {
@@ -25,12 +26,14 @@ const Todo = () => {
     }
   };
   const handletask = async() => {
-    if( input.trim() != "") {
+    if( title.trim() != "") {
       try {
-      await axios.post("http://localhost:5000/api/tasks/edit", {
-        task: input
+      await axios.post("http://localhost:5000/api/tasks/new", {
+        title: title,
+        content: content
       });
-      settasks([...tasks , input]);
+      setTitle("");
+      setContent("");
       fetchTasks();
       } catch (error) {
       console.error("Error sending task to backend:", error);
@@ -39,10 +42,10 @@ const Todo = () => {
   }
    const deleteTask = async (id) => {
     try {
-      await fetch(`http://localhost:5000/api/tasks/delete/${id}`, {
+      await fetch(`http://localhost:5000/api/tasks/${id}`, {
         method: "DELETE",
       });
-      settasks(tasks.filter((task) => task._id !== id));
+      fetchTasks();
     } catch (err) {
       console.error("Error deleting task:", err);
     }
@@ -56,25 +59,34 @@ const Todo = () => {
           <h1 className="text-center font-extrabold text-3xl mb-6">
             Enter Your Important Task!!
           </h1>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2">
              <input
-              className="text-white border-0 px-2 rounded-2xl w-80 h-10 mb-6 bg-gray-500"
+              className="text-white border-0 px-2 rounded-2xl w-80 h-10 mb-2 bg-gray-500"
               type="text"
-              placeholder="Enter a your task"
-              onChange={e => setinput(e.target.value)}
+              placeholder="Enter task title"
+              value={title}
+              onChange={e => setTitle(e.target.value)}
+              />
+             <textarea
+              className="text-white border-0 px-2 rounded-2xl w-80 h-20 mb-4 bg-gray-500 resize-none"
+              placeholder="Enter task content"
+              value={content}
+              onChange={e => setContent(e.target.value)}
               />
            <div className="text-center font-semibold mb-6">
               <button onClick={handletask} className="border bg-blue-700 px-2 py-2 text-white rounded-lg outline-none">
                 Add Task
               </button>
           </div>
-
           </div>
            <ul>
              {tasks.map((task) => (
-             <li key={task._id} className="flex justify-between items-center bg-gray-200 px-3 py-2 rounded text-black mb-4">
-              <span>{task.task}</span>
-              <button onClick={() => deleteTask(task._id)}><DeleteIcon /></button>
+             <li key={task.id} className="flex justify-between items-center bg-gray-200 px-3 py-2 rounded text-black mb-4">
+              <div>
+                <div className="font-semibold">{task.title}</div>
+                <div className="text-sm text-gray-600">{task.content}</div>
+              </div>
+              <button onClick={() => deleteTask(task.id)}><DeleteIcon /></button>
               </li>
             ))}
            </ul>

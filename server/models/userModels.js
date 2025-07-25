@@ -1,8 +1,11 @@
 import pool from "../database/db.js";
 
 
-export const displayAll = async() => {
-    const result = await pool.query("SELECT * FROM data");
+export const displayAll = async () => {
+  const result = await pool.query("SELECT * FROM data");
+  if (result === "") {
+    return "no data in the db";
+  }
     return result.rows;
 }
 

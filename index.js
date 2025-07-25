@@ -1,6 +1,6 @@
 import express from "express";
-//import router from "./server/routes/userRoutes";
-import router from "./server/routes/authRoutes.js"
+import userRouter from "./server/routes/userRoutes.js";
+import authRouter from "./server/routes/authRoutes.js"
 import cors from "cors";
 const app = express();
 
@@ -22,7 +22,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", router);
+app.use("/", authRouter);
+app.use("/", userRouter);
 
 
 

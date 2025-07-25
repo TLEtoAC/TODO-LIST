@@ -104,7 +104,7 @@ const Signup = () => {
       <div className="flex justify-center items-center min-h-screen hover:scale-100 transition-all duration-300 ease-in-out " data-aos="fade-up">
         <div sx={{ height: "50px"}} className=" w-md bg-white rounded-2xl border border-purple-700 p-8">
           <h1 className="text-center font-extrabold text-3xl mb-6">
-            Login Form
+            Sign Up
           </h1>
           <div className="text-center">
             <input
@@ -133,10 +133,10 @@ const Signup = () => {
             </button>
           </div>
           <div className="flex text-blue-700 font-semibold gap-25">
-            <button type="button" onClick={Forget} className="text-black">
-              Forget password?
-            </button>
-            <button type onClick={Create}>Create New Account</button>
+            <Link to="/Login">
+              <button type="button" className="text-blue-700">Already have account? Login</button>
+            </Link>
+            <button type="button" onClick={Create}>Create New Account</button>
           </div>
           <div className="flex items-center my-6">
             <div className="flex-grow border-t border-gray-700"></div>

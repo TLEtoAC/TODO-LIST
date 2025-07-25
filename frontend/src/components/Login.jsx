@@ -57,16 +57,14 @@ const Login = () => {
       if (response.ok) {
         alert("Login successful!");
         console.log(data);
-        setname('');
         setemail('');
         setpassword('');
-        setconfirm('');
         // Redirect to dashboard or home page after successful login
       } else {
         alert(data.message || "Login failed.");
       }
     } catch (error) {
-      console.error("Signup error:", error);
+      console.error("Login error:", error);
       alert("Something went wrong.");
     }
   };
@@ -109,19 +107,12 @@ const Login = () => {
     <div sx={{ height: "50px"}} className=" w-md bg-white rounded-2xl border border-purple-700 p-8">
        <h1 className='text-center font-extrabold text-3xl mb-6'>Login</h1>
        <div className='text-center'>
-       <input onChange={e => setname(e.target.value)} className='text-white border-0 px-2 rounded-2xl w-80 h-10 mb-6 bg-gray-500' type='text' name='username' placeholder='Enter a Full Name' value={name} />
-       <input onChange={e => setemail(e.target.value)} className='text-white border-0 px-2 rounded-2xl w-80 h-10 mb-6 bg-gray-500' type='text' name='username' placeholder='Enter here Email' value={email} />
+       <input onChange={e => setemail(e.target.value)} className='text-white border-0 px-2 rounded-2xl w-80 h-10 mb-6 bg-gray-500' type='email' name='email' placeholder='Enter your email' value={email} />
 
-       <div className=' relative flex justify-center items-center gap-2 '>  
-       <input ref={PasswordRef1} onChange={e => setpassword(e.target.value)} className='text-white border-0 px-2 rounded-2xl w-80 h-10 mb-6 bg-gray-500' type='password' name='username' placeholder='Enter here XXXXXXX' value={password} />
+       <div className=' relative flex justify-center items-center gap-2 mb-6'>  
+       <input ref={PasswordRef1} onChange={e => setpassword(e.target.value)} className='text-white border-0 px-2 rounded-2xl w-80 h-10 mb-6 bg-gray-500' type='password' name='password' placeholder='Enter your password' value={password} />
          <span onClick={showPassword1} className='absolute right-12 top-2 cursor-pointer'>
            <img ref={IconRef1} className='w-6' src={invisible}/>
-         </span>
-        </div>
-        <div className=' relative flex justify-center items-center gap-2 mb-6'>
-         <input ref={PasswordRef} onChange={e => setconfirm(e.target.value)} className='text-white border-0 px-2 rounded-2xl w-80 h-10 mb-6 bg-gray-500' type='password' name='username' placeholder='Enter here Confirm XXXXXXX' value={confirm} />
-         <span onClick={showPassword} className='absolute right-12 top-2 cursor-pointer'>
-           <img ref={IconRef} className='w-6' src={invisible}/>
          </span>
         </div>
        </div>
@@ -130,9 +121,11 @@ const Login = () => {
        </div>
 
        <div className='flex text-blue-700 justify-between font-bold cursor-pointer'>
-         <button  onClick={add} ><ArrowBackIcon/>Back</button>
+         <Link to="/">
+           <button type="button"><ArrowBackIcon/>Back to Signup</button>
+         </Link>
          <Link to="/Todo">
-         <button>Next</button><ArrowForwardIcon />
+           <button type="button">Skip to Todo</button><ArrowForwardIcon />
          </Link>
        </div>
        <h3 className="mt-8 text-xl font-semibold">Registered Users:</h3>

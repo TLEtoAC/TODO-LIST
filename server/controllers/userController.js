@@ -2,6 +2,8 @@ import pool from "../database/db.js";
 import { displayAll, NewtaskModel, EdittaskModel, DeletetaskModel } from "../models/userModels.js";
 
 export const displaytasks = async (req, res) => {
+    const limit = req.query.limit;
+    const page = req.query.page;
     try {
         const response = await displayAll();
         console.log(response);

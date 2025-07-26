@@ -1,5 +1,11 @@
 import pool from "../database/db.js";
 import bcrypt from "bcrypt";
+import { body, validationResult } from "express-validator";
+
+export const validate = [
+  body('email').isEmail().withMessage("enter valid email"), body('password').isLength({ min: 6 }).withMessage("password must be atleast 6 characters long")
+];
+
 export const signup = async (req, res) => {
   console.log('Signup request received:', req.body, 'Headers:', req.headers);
   
@@ -9,8 +15,9 @@ export const signup = async (req, res) => {
   }
   
   const { email, password } = req.body || {};
-  if (email === "" || password === "") {
-    return res.status(400).json({ message: "Fields missing" });
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
   const hashedpass = await bcrypt.hash(password, 10);
   try {
@@ -25,14 +32,18 @@ export const signup = async (req, res) => {
   }
 };
 
+
+
 export const login = async (req, res) => {
   console.log('Login request received:', req.body);
   const { email, password } = req.body;
-  
-  if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required" });
+  //  if (!req.body) {
+  //    return res.status(400).json({ message: "Request body is missing" });
+  //  }
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
   }
-  
   try {
     const result = await pool.query("SELECT * FROM users WHERE email=$1", [email]);
     
